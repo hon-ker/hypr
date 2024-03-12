@@ -71,16 +71,18 @@ audio_packages["udev"]="Device manager for the Linux kernel"
 # tools
 declare -A tools_packages
 tools_packages["google-chrome"]="Web browser developed by Google"
-tools_packages["discord"]="All-in-one voice and text chat for gamers"
 tools_packages["telegram-desktop"]="Telegram Desktop messaging app"
-tools_packages["ranger"]="Console file manager with VI key bindings"
 tools_packages["code"]="Visual Studio Code, a powerful code editor"
 tools_packages["v2raya"]="A simple V2Ray client for Linux"
 tools_packages["wps-office-cn"]="WPS Office suite (Chinese version)"
 tools_packages["ttf-wps-fonts"]="WPS Office fonts package"
 tools_packages["wps-office-mui-zh-cn"]="WPS Office multi-language support (Chinese)"
 tools_packages["vmware-workstation"]="Virtualization software for running multiple operating systems on a single PC"
-tools_packages["pycharm-community-edition"]="Python IDE for Professional Developers, free and open-source"
+tools_packages["wl-clipboard"]="copy"
+
+declare -A hacktools_packages
+tools_packages["gnu-netcat"]="Netcat"
+tools_packages["nmap"]="Nmap"
 
 # 初始化
 init_actions=(
@@ -88,23 +90,19 @@ init_actions=(
     "sudo pacman -Syy"
 )
 
+
 # 命令数组
 actions=(
+    "sudo mv $HOME/hypr/.config $HOME/"
+    "sudo mv $HOME/hypr/etc/environment /etc/"
+    "sudo rm -fr /etc/fonts"
+    "sudo mv $HOME/hypr/etc/fonts /etc/"
     "sudo systemctl enable v2raya.service"
     "sudo systemctl start v2raya.service"
     "sudo systemctl enable bluetooth"
     "sudo systemctl start bluetooth"
     "sudo modprobe -a vmw_vmci vmmon"
     "sudo ln -s $HOME/.config/hypr/start_hypr.sh /usr/bin/start_hypr"
-    "sudo sh -c 'cat <<EOF >> /etc/environment
-        GTK_IM_MODULE=fcitx
-        QT_IM_MODULE=fcitx
-        XMODIFIERS=@im=fcitx
-        SDL_IM_MODULE=fcitx
-        GLFW_IM_MODULE=ibus
-        EOF
-        '
-    "
 )
 
 logo() {
@@ -252,7 +250,7 @@ if ! grep -q "\[archlinuxcn\]" /etc/pacman.conf; then
 fi
 
 #初始化
-# do_actions "init" init_actions
+do_actions "init" init_actions
 # 安装base类别的包
 install "base" base_packages
 # 安装驱动
@@ -270,6 +268,7 @@ install "audio" audio_packages
 # 如果重启后仍旧没有声音,可以重新安装udevi尝试一下(亲测有效)
 info "If there's still no sound after the restart, you can try reinstalling udev(sudo pacman -S udev)."
 echo
+install "hack tools" hacktools_packages
 # 安装常用工具,如浏览器,vscode,wps,vmware,pycharm,v2ray,telegram,discord等
 
 # =============================================
